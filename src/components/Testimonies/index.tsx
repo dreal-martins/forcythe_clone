@@ -4,7 +4,7 @@ import { animatedText, containerVariants } from "../../utils/animateText";
 
 const logos = [
   {
-    src: "https://res-console.cloudinary.com/dfruoqaze/media_explorer_thumbnails/41b1aae1b6419a737604f5a10666c39e/detailed",
+    src: "http://res.cloudinary.com/dfruoqaze/image/upload/v1736724065/coa3gtqumpcnkaea6fqo.svg",
     name: "Starks",
     description:
       "Partnering with Forcythe was like finding a hidden gem. Their genuine interest in our success was palpable, and the continuous support post-launch has been a testament to their commitment. They’ve become more than a service provider; they’re a trusted ally.",
