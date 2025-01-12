@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { animatedText, containerVariants } from "../../utils/animateText";
 
 const logos = [
   {
@@ -56,6 +57,7 @@ const logos = [
 
 const Testimonies = () => {
   const [selectedLogoIndex, setSelectedLogoIndex] = useState(0);
+  const ref = useRef(null);
 
   const handleLogoClick = (index: number) => {
     setSelectedLogoIndex(index);
@@ -69,14 +71,23 @@ const Testimonies = () => {
   }, []);
 
   const logoDetails = logos[selectedLogoIndex];
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
 
   return (
-    <div className="py-16 px-[1.25rem] md:px-[7rem]">
-      <h1 className="text-[2rem] leading-[2.5rem] sm:text-[2.2rem] sm:leading-[2.5rem] lg:text-[2.6rem] lg:leading-[3.5rem] pb-10 max-w-3xl mx-auto text-center">
-        Discover the{" "}
-        <span className="text-[#60a6e7]">transformative stories</span> of
-        startups that scaled new heights with us
-      </h1>
+    <motion.div ref={ref} className="py-16 px-[1.25rem] md:px-[7rem]">
+      <motion.h1
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
+        variants={containerVariants}
+        className="text-[2rem] leading-[2.5rem] sm:text-[2.2rem] sm:leading-[2.5rem] lg:text-[2.6rem] lg:leading-[3.5rem] pb-10 max-w-3xl mx-auto text-center"
+      >
+        {animatedText("Discover the")}
+        <span className="text-[#60a6e7]">
+          {" "}
+          {animatedText("transformative stories")}
+        </span>{" "}
+        {animatedText("of startups that scaled new heights with us")}
+      </motion.h1>
 
       <div className="w-full flex flex-col items-center">
         <div className="w-full overflow-x-scroll md:overflow-hidden flex">
@@ -110,26 +121,57 @@ const Testimonies = () => {
         </div>
 
         {logoDetails && (
-          <div className="mt-5 w-full md:w-[70%] lg:w-[50%] rounded-[1.8rem] flex flex-col sm:flex-row p-5 sm:p-7 bg-sky-950">
+          <motion.div
+            className="mt-5 w-full md:w-[70%] lg:w-[50%] rounded-[1.8rem] flex flex-col sm:flex-row p-5 sm:p-7 bg-sky-950"
+            initial="hidden"
+            animate="visible"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.2,
+                },
+              },
+            }}
+          >
             <div className="sm:basis-[58%] pr-3">
-              <div>
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+                }}
+              >
                 <p className="text-base font-bold mb-4">{logoDetails.name}</p>
-              </div>
-              <div>
+              </motion.div>
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+                }}
+              >
                 <p className="text-base leading-7 mb-3">
                   {logoDetails.description}
                 </p>
-              </div>
-              <div>
+              </motion.div>
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+                }}
+              >
                 <p className="text-[15px] font-semibold mb-4">
                   {logoDetails.nameAndRole}
                 </p>
-              </div>
+              </motion.div>
             </div>
 
-            <div
+            <motion.div
               key={selectedLogoIndex}
               className="w-full h-[24rem] sm:w-auto sm:h-auto sm:basis-[42%] relative mt-3 sm:mt-0"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6, duration: 0.8, ease: "easeOut" }}
             >
               <div className="bg-accent z-0 w-full h-full absolute top-0 left-0 bg-opacity-10 animate-pulse rounded-xl"></div>
               <img
@@ -137,11 +179,11 @@ const Testimonies = () => {
                 src={`${logoDetails.profilePhotoUrl}?t=${selectedLogoIndex}`}
                 className="rounded-xl relative object-cover w-full h-full"
               />
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,6 +1,9 @@
 import React from "react";
 import BlogCard from "./BlogCard";
 import CtaButton from "../CtaButton";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
+import { animatedText, containerVariants } from "../../utils/animateText";
 
 const BlogSection: React.FC = () => {
   const blogs = [
@@ -29,15 +32,21 @@ const BlogSection: React.FC = () => {
       href: "#",
     },
   ];
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
 
   return (
-    <div className="py-16 px-[1.25rem] md:px-[7rem]">
+    <div ref={ref} className="py-16 px-[1.25rem] md:px-[7rem]">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-12">
-        <div>
-          <h2 className="text-[2rem] leading-[2.5rem] sm:text-[2.2rem] sm:leading-[2.5rem] lg:text-[2.6rem] lg:leading-[3rem] mb-6 sm:mb-4 md:mb-0">
-            Read our articles, news, and product blog
-          </h2>
-        </div>
+        <motion.div
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
+          variants={containerVariants}
+        >
+          <motion.h2 className="text-[2rem] leading-[2.5rem] sm:text-[2.2rem] sm:leading-[2.5rem] lg:text-[2.6rem] lg:leading-[3rem] mb-6 sm:mb-4 md:mb-0">
+            {animatedText("Read our articles, news, and product blog")}
+          </motion.h2>
+        </motion.div>
         <CtaButton blog />
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">

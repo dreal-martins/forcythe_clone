@@ -1,6 +1,9 @@
+import { useState } from "react";
 import CtaButton from "../CtaButton";
+import MobileMenu from "../MobileMenu";
 
 const Header = () => {
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   return (
     <header className="w-full fixed top-0 left-0 py-[1.5rem] md:py-[1.8rem] px-[1.5rem] md:px-[7rem] flex justify-between gap-10 items-center z-30 backdrop-blur-md">
       <div className="flex justify-start items-center gap-[5.5rem]">
@@ -33,7 +36,10 @@ const Header = () => {
         </ul>
       </div>
 
-      <div className="bg-white bg-opacity-10 rounded-md p-3 md:hidden cursor-pointer">
+      <div
+        onClick={() => setShowMobileMenu(!showMobileMenu)}
+        className="bg-white bg-opacity-10 rounded-md p-3 md:hidden cursor-pointer"
+      >
         <img
           alt="menu"
           loading="lazy"
@@ -41,13 +47,14 @@ const Header = () => {
           height="18"
           decoding="async"
           data-nimg="1"
-          src="/src/assets/icons/menu.svg"
+          src="https://forcythe.com/images/menu.svg"
         />
       </div>
 
       <div className="hidden md:block">
         <CtaButton />
       </div>
+      {showMobileMenu && <MobileMenu />}
     </header>
   );
 };

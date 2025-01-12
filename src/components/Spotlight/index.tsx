@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import CtaButton from "../CtaButton";
+import { motion, AnimatePresence, useInView } from "framer-motion";
+import { animatedText, containerVariants } from "../../utils/animateText";
 
 const Spotlight = () => {
   const steps = ["Idea", "Design", "Develop", "Launch"];
   const [activeStep, setActiveStep] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-10%" });
 
   const stepData = [
     {
@@ -32,13 +36,40 @@ const Spotlight = () => {
     },
   ];
 
+  const textVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    exit: { opacity: 0, y: -20, transition: { duration: 0.3 } },
+  };
+
+  const imageVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+    exit: { opacity: 0, scale: 0.9, transition: { duration: 0.3 } },
+  };
+
   return (
-    <div className="py-16 px-[1.25rem] md:px-[7rem]">
-      <p className="text-[2rem] leading-[2.5rem] sm:text-[2.2rem] sm:leading-[2.5rem] lg:text-[2.5rem] lg:leading-[3rem] md:w-[70%] pb-10 md:pb-0">
-        From <span className="text-[#60a6e7] capitalize">Spark</span> to
-        <span className="text-[#60a6e7] capitalize"> Spotlight</span>: we take
-        you every step of the way to success.
-      </p>
+    <motion.div
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      className="py-16 px-[1.25rem] md:px-[7rem]"
+      variants={containerVariants}
+      ref={ref}
+    >
+      <motion.p
+        variants={containerVariants}
+        className="text-[2rem] leading-[2.5rem] sm:text-[2.2rem] sm:leading-[2.5rem] lg:text-[2.5rem] lg:leading-[3rem] md:w-[70%] pb-10 md:pb-0"
+      >
+        {animatedText("From")}{" "}
+        <span className="text-[#60a6e7] capitalize">
+          {animatedText("Spark")}
+        </span>{" "}
+        {animatedText("to")}
+        <span className="text-[#60a6e7] capitalize">
+          {animatedText("Spotlight:")}
+        </span>
+        {animatedText(" we take you every step of the way to success.")}
+      </motion.p>
 
       <div className="flex flex-col md:flex-row lg:items-end">
         <div className="basis-1/2 flex mb-8 md:mb-0">
@@ -59,31 +90,43 @@ const Spotlight = () => {
               ))}
             </div>
 
-            <div>
-              <p className="text-[1.8rem] sm:text-[2rem] font-medium leading-8 sm:leading-8 mb-12">
-                {stepData[activeStep].title}
-              </p>
-            </div>
-
-            <div>
-              <p className="text-zinc-400 text-base md:text-lg mb-8 leading-7">
-                {stepData[activeStep].description}
-              </p>
-            </div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeStep}
+                variants={textVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+              >
+                <p className="text-[1.8rem] sm:text-[2rem] font-medium leading-8 sm:leading-8 mb-12">
+                  {stepData[activeStep].title}
+                </p>
+                <p className="text-zinc-400 text-base md:text-lg mb-8 leading-7">
+                  {stepData[activeStep].description}
+                </p>
+              </motion.div>
+            </AnimatePresence>
 
             <CtaButton />
           </div>
         </div>
 
         <div className="basis-1/2 relative flex justify-start md:justify-end mt-6 md:mt-0">
-          <img
-            alt="plan-img"
-            src={stepData[activeStep].image}
-            className="w-full h-[350px] md:w-[95%] md:h-[95%] lg:w-[90%] lg:h-[426px] transition-opacity duration-500 opacity-100"
-          />
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={activeStep}
+              alt="plan-img"
+              src={stepData[activeStep].image}
+              className="w-full h-[350px] md:w-[95%] md:h-[95%] lg:w-[90%] lg:h-[426px] rounded-xl"
+              variants={imageVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            />
+          </AnimatePresence>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
